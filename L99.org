@@ -54,9 +54,20 @@ Example:
   (my-last '(a b c d))
 (D)
 
+#+begin_src lisp
+(defun my-last (lst)
+  (if (null (cdr lst))
+      lst
+      (my-last (cdr lst))))
+(my-last '(a b c d))
+#+end_src
+
+#+RESULTS:
+| D |
+
 :SOLUTION:
 In Common Lisp, there is a built-in function ~last~, but it dosn't return a list.
-#+begin_src lisp
+,#+begin_src lisp
   (defun my-last (l &aux (xs (cdr l)))
     (if xs (my-last xs) l))
 
@@ -89,6 +100,17 @@ Example:
   (my-but-last '(a b c d))
 (C D)
 
+#+begin_src lisp
+(defun my-last (lst)
+  (if (null (cddr lst))
+      lst
+      (my-last (cdr lst))))
+(my-last '())
+#+end_src
+
+#+RESULTS:
+: NIL
+
 :SOLUTION:
 In Common Lisp, there is a built-in function ~but-last~.
 #+begin_src lisp
@@ -111,6 +133,19 @@ Example:
   (element-at '(a b c d e) 3)
 C
 
+#+begin_src lisp
+(defun element-at (lst pos)
+  (if (or (null lst)
+          (= pos 1))
+      (car lst)
+      (element-at (cdr lst) (- pos 1))))
+
+(element-at '(a b c d e) 3)
+#+end_src
+
+#+RESULTS:
+: C
+
 :SOLUTION:
 In Common Lisp, there is a built-in function ~nth~ (which counts from 0).
 #+begin_src lisp
@@ -132,6 +167,20 @@ In Common Lisp, there is a built-in function ~nth~ (which counts from 0).
 :END:
 ** P04 (⋆) Find the number of elements of a list.
 
+#+begin_src lisp
+(defun len (lst)
+  (labels ((helper (lst len)
+             (if (cdr lst)
+                 (helper (cdr lst) (+ 1 len))
+                 len)))
+    (helper lst 1)))
+
+(len '(a b c d))
+#+end_src
+
+#+RESULTS:
+: 4
+
 :SOLUTION:
 In Common Lisp, there is a built-in function ~length~.
 #+begin_src lisp
@@ -147,6 +196,19 @@ In Common Lisp, there is a built-in function ~length~.
 
 :END:
 ** P05 (⋆) Reverse a list.
+
+#+begin_src lisp
+(defun m-reverse (lst)
+  (labels ((helper (lst res)
+             (if (cdr lst)
+                 (helper (cdr lst) (cons (car lst) res)))))
+    (helper lst ())))
+
+(reverse '(a b c d e))
+#+end_src
+
+#+RESULTS:
+| E | D | C | B | A |
 
 :SOLUTION:
 In Common Lisp, there is a built-in function ~reverse~. Don't mess it with the destructive one ~nreverse~.
@@ -168,6 +230,11 @@ In Common Lisp, there is a built-in function ~reverse~. Don't mess it with the d
 :END:
 ** P06 (⋆) Find out whether a list is a palindrome.
 A palindrome can be read forward or backward; e.g. (x a m a x).
+
+#+begin_src lisp
+(define palindrome-p (lst)
+  )
+#+end_src
 
 :SOLUTION:
 This may be the simplest solution.
