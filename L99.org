@@ -232,9 +232,14 @@ In Common Lisp, there is a built-in function ~reverse~. Don't mess it with the d
 A palindrome can be read forward or backward; e.g. (x a m a x).
 
 #+begin_src lisp
-(define palindrome-p (lst)
-  )
+(defun palindrome-p (lst)
+  (equal lst (reverse lst)))
+
+(palindrome-p '(x a m a x))
 #+end_src
+
+#+RESULTS:
+: T
 
 :SOLUTION:
 This may be the simplest solution.
@@ -260,6 +265,18 @@ Example:
 (A B C D E)
 
 Hint: Use the predefined functions list and append.
+
+#+begin_src lisp
+(defun flatten (lst)
+  (if (listp lst)
+      (apply #'append (mapcar #'flatten lst))
+      (list lst)))
+
+(flatten '(a (b (c d) e)))
+#+end_src
+
+#+RESULTS:
+| A | B | C | D | E |
 
 :SOLUTION:
 This is a very common operation in list manipulation, but no built-in for it.
