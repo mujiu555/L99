@@ -29,6 +29,7 @@
                 agnostic-lizard
               ]
             ))
+            roswell
           ];
 
           shellHook = ''

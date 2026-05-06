@@ -328,6 +328,24 @@ Example:
   (compress '(a a a a b c c a a d e e e e))
 (A B C A D E)
 
+#+begin_src lisp
+(defun eliminate (lst)
+  (labels ((helper (origin new)
+             (let ((c (car origin))
+                   (p (car new)))
+               (if (null c)
+                   new
+                   (if (equal c p)
+                       (helper (cdr origin) new)
+                       (helper (cdr origin) (cons c new)))))))
+    (reverse (helper lst '()))))
+
+(eliminate '(a a a a b c c a a d e e e e))
+#+end_src
+
+#+RESULTS:
+| A | B | C | A | D | E |
+
 :SOLUTION:
 #+begin_src lisp
   (defun compress (l &aux (x  (car l)) (xs (cdr l)))
@@ -351,6 +369,22 @@ If a list contains repeated elements they should be placed in separate sublists.
 Example:
   (pack '(a a a a b c c a a d e e e e))
 ((A A A A) (B) (C C) (A A) (D) (E E E E))
+
+#+begin_src lisp
+(defun pack (lst &aux (f (car lst)) (r (cdr lst)))
+  (unless (null f)
+    (let* ((new (pack r))
+           (p (car new))
+           (pc (car p)))
+      (if (equal f pc)
+          (cons (cons f p) (cdr new))
+          (cons (list f) new)))))
+
+(pack '(a a a a b c c a a d e e e e))
+#+end_src
+
+#+RESULTS:
+: NIL
 
 :SOLUTION:
 #+begin_src lisp
@@ -378,6 +412,28 @@ Use the result of problem [[*P09 (⋆⋆) Pack consecutive duplicates of list el
 Example:
   (encode '(a a a a b c c a a d e e e e))
 ((4 A) (1 B) (2 C) (2 A) (1 D) (4 E))
+
+#+begin_src lisp
+(defun encode (lst &aux (f (car lst)) (r (cdr lst)))
+  (unless (null f)
+    (let* ((new (encode r))
+           (p (car new))
+           (pn (car p))
+           (pc (cadr p)))
+      (if (equal f pc)
+          (cons (list (1+ pn) pc) (cdr new))
+          (cons (list 1 f) new)))))
+
+(encode '(a a a a b c c a a d e e e e))
+#+end_src
+
+#+RESULTS:
+| 4 | A |
+| 1 | B |
+| 2 | C |
+| 2 | A |
+| 1 | D |
+| 4 | E |
 
 :SOLUTION:
 Use ~pack~ defined in P09
